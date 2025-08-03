@@ -26,7 +26,7 @@ plt.show()
 
 # Encryption setup
 key = '257'
-text = 'THIS IS A SECRET MESSAGE MEANT ONLY FOR STUDENTS OF CYBERSECURITY WORKSHOP CONDUCTED BY EDUNET IN COLLABORATION WITH IBM SKILLBUILD'
+text = 'THIS IS A SECRET MESSAGE'
 
 # Convert text and key to ASCII values
 text_ascii = [d[ch] for ch in text]
