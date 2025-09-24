@@ -1,41 +1,49 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
-    <section className="section-padding">
-      <div className="container-custom">
+    <section className="py-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+          {/* Main Title */}
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
             IMAGE STEGANOGRAPHY
           </h1>
-          <p className="text-lg md:text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
+          
+          {/* Subtitle */}
+          <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed max-w-3xl mx-auto">
             Your secrets, hidden in pixels - send invisible, encrypted messages inside ordinary images, safe from prying eyes
           </p>
+          
+          {/* Tagline */}
           <div className="text-2xl md:text-3xl font-semibold text-primary-600 mb-10">
             Encrypt.Embed.Disappear
           </div>
           
-          <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-10">
+          {/* Feature Card */}
+          <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10 mb-12 transform hover:scale-105 transition-transform duration-300">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
               Secure Steganography Suite
             </h2>
-            <p className="text-gray-700 text-lg">
+            <p className="text-gray-700 text-lg md:text-xl leading-relaxed">
               Advanced tools for covert data embedding and extraction across multiple image formats
             </p>
           </div>
           
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button className="btn-primary text-lg py-3 px-6">
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-6">
+            <Link to="/tool" className="btn-primary text-center">
               Start Encrypting
-            </button>
-            <button className="btn-secondary text-lg py-3 px-6">
+            </Link>
+            <button className="btn-secondary">
               Learn More
             </button>
           </div>
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Hero
+export default Hero;
