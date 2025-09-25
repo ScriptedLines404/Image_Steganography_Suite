@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 const SteganographyTool = () => {
   const [activeTab, setActiveTab] = useState('hide');
   const [coverImage, setCoverImage] = useState(null);
-  const [secretImage, setSecretImage] = useState(null); // FIXED: Changed setCoverImage to setSecretImage
+  const [secretImage, setSecretImage] = useState(null);
   const [coverExample, setCoverExample] = useState('N/A');
   const [secretExample, setSecretExample] = useState('N/A');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -14,10 +14,14 @@ const SteganographyTool = () => {
   const [encryptionKey, setEncryptionKey] = useState('');
   const [resultImage, setResultImage] = useState(null);
   const [extractedText, setExtractedText] = useState('');
+  const [originalFileName, setOriginalFileName] = useState('');
 
+  // Define the function properly at the component level
   const handleCoverImageChange = (e) => {
-    if (e.target.files[0]) {
-      setCoverImage(URL.createObjectURL(e.target.files[0]));
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setCoverImage(URL.createObjectURL(file));
+      setOriginalFileName(file.name.replace(/\.[^/.]+$/, "")); // Store original filename without extension
     }
   };
 
@@ -46,6 +50,41 @@ const SteganographyTool = () => {
     setEncryptionKey('');
     setResultImage(null);
     setExtractedText('');
+    setOriginalFileName('');
+  };
+
+  // Function to download the result image
+  const downloadResultImage = () => {
+    if (!resultImage) return;
+
+    // Create a temporary anchor element
+    const link = document.createElement('a');
+    link.href = resultImage;
+    
+    // Generate filename based on technique and original filename
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const techniqueName = technique.toUpperCase();
+    const originalName = originalFileName || 'stego';
+    link.download = `${originalName}_${techniqueName}_${timestamp}.png`;
+    
+    // Trigger download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // Function to copy extracted text to clipboard
+  const copyToClipboard = () => {
+    if (!extractedText) return;
+    
+    navigator.clipboard.writeText(extractedText)
+      .then(() => {
+        // You could add a temporary success message here
+        alert('Text copied to clipboard!');
+      })
+      .catch(err => {
+        console.error('Failed to copy text: ', err);
+      });
   };
 
   const techniqueDescriptions = {
@@ -343,10 +382,25 @@ const SteganographyTool = () => {
                         className="w-32 h-32 object-cover rounded-lg border-2 border-green-500/30 shadow-lg"
                       />
                     </div>
-                    <div className="mt-4">
-                      <button className="px-4 py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg transition-colors duration-300">
+                    <div className="mt-4 flex gap-4 justify-center">
+                      <button 
+                        onClick={downloadResultImage}
+                        className="px-6 py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg transition-colors duration-300 flex items-center"
+                      >
+                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
                         Download Secure Image
                       </button>
+                      <button 
+                        onClick={handleReset}
+                        className="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors duration-300"
+                      >
+                        Process Another
+                      </button>
+                    </div>
+                    <div className="mt-2 text-sm text-gray-400">
+                      File will be saved as: {originalFileName || 'stego'}_{technique.toUpperCase()}_{new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)}.png
                     </div>
                   </div>
                 )}
@@ -354,8 +408,25 @@ const SteganographyTool = () => {
                 {activeTab === 'unhide' && extractedText && (
                   <div>
                     <p className="text-gray-300 mb-2">Hidden message extracted successfully:</p>
-                    <div className="p-4 bg-gray-800/50 rounded-lg border border-green-500/30">
-                      <p className="text-green-400 font-mono whitespace-pre-wrap">{extractedText}</p>
+                    <div className="p-4 bg-gray-800/50 rounded-lg border border-green-500/30 mb-4">
+                      <p className="text-green-400 font-mono whitespace-pre-wrap break-words">{extractedText}</p>
+                    </div>
+                    <div className="flex gap-4">
+                      <button 
+                        onClick={copyToClipboard}
+                        className="px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors duration-300 flex items-center"
+                      >
+                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        Copy to Clipboard
+                      </button>
+                      <button 
+                        onClick={handleReset}
+                        className="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors duration-300"
+                      >
+                        Extract Another
+                      </button>
                     </div>
                   </div>
                 )}
