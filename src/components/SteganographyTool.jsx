@@ -185,7 +185,7 @@ const SteganographyTool = () => {
             <div className="space-y-6 mb-8">
               <h3 className="text-xl font-bold text-white">
                 <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                  Cover Image:
+                  Image:
                 </span>
               </h3>
               
@@ -199,7 +199,7 @@ const SteganographyTool = () => {
                     id="cover-input"
                   />
                   <div className="w-full py-3 px-4 bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 transform hover:scale-105 text-center cursor-pointer font-medium">
-                    Choose Cover Image
+                    Choose Image
                   </div>
                 </label>
                 <span className="text-sm text-gray-400 flex-1">
@@ -297,7 +297,7 @@ const SteganographyTool = () => {
             <div className="flex gap-4 justify-center mt-8">
               <button 
                 onClick={handleProcess}
-                disabled={isProcessing || !coverImage || (activeTab === 'hide' && !secretText) || !encryptionKey}
+                disabled={isProcessing || !coverImage || (activeTab === 'hide' && !secretText) || (technique !== 'lsb' && !encryptionKey)}
                 className="group relative overflow-hidden px-8 py-3 rounded-2xl font-bold text-lg transition-all duration-500 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex-1 max-w-xs"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:from-blue-500 group-hover:to-purple-500 transition-all duration-300"></div>
