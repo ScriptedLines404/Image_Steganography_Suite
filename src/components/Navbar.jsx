@@ -4,6 +4,30 @@ import { Link } from 'react-router-dom';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Smooth scroll function for hash links
+  const smoothScrollTo = (hash) => {
+    const element = document.querySelector(hash);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+    setIsMenuOpen(false);
+  };
+
+  // Handle click for navigation links
+  const handleNavClick = (hash, e) => {
+    e.preventDefault();
+    if (window.location.pathname === '/') {
+      // If we're on the home page, smooth scroll
+      smoothScrollTo(hash);
+    } else {
+      // If we're on another page, navigate to home first then scroll
+      window.location.href = `/${hash}`;
+    }
+  };
+
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-500
@@ -27,27 +51,20 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <a
-              href="#features"
+            <button
+              onClick={(e) => handleNavClick('#features', e)}
               className="text-gray-300 hover:text-white font-medium transition-all duration-300 hover:scale-105 relative group"
             >
               Features
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 group-hover:w-full transition-all duration-300"></span>
-            </a>
-            <a
-              href="#security"
-              className="text-gray-300 hover:text-white font-medium transition-all duration-300 hover:scale-105 relative group"
-            >
-              Security
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 group-hover:w-full transition-all duration-300"></span>
-            </a>
-            <a
-              href="#techniques"
+            </button>
+            <button
+              onClick={(e) => handleNavClick('#techniques', e)}
               className="text-gray-300 hover:text-white font-medium transition-all duration-300 hover:scale-105 relative group"
             >
               Techniques
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 group-hover:w-full transition-all duration-300"></span>
-            </a>
+            </button>
             <Link
               to="/tool"
               className="group relative overflow-hidden px-6 py-3 rounded-xl font-semibold text-white transition-all duration-500 transform hover:scale-105"
@@ -110,27 +127,18 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="md:hidden py-6 border-t border-white/10 bg-gray-900/95 backdrop-blur-xl rounded-b-2xl mt-2">
             <div className="flex flex-col space-y-6">
-              <a
-                href="#features"
-                className="text-gray-300 hover:text-white font-medium transition-all duration-300 py-2 px-4 rounded-lg hover:bg-white/5"
-                onClick={() => setIsMenuOpen(false)}
+              <button
+                onClick={(e) => handleNavClick('#features', e)}
+                className="text-gray-300 hover:text-white font-medium transition-all duration-300 py-2 px-4 rounded-lg hover:bg-white/5 text-left"
               >
                 Features
-              </a>
-              <a
-                href="#security"
-                className="text-gray-300 hover:text-white font-medium transition-all duration-300 py-2 px-4 rounded-lg hover:bg-white/5"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Security
-              </a>
-              <a
-                href="#techniques"
-                className="text-gray-300 hover:text-white font-medium transition-all duration-300 py-2 px-4 rounded-lg hover:bg-white/5"
-                onClick={() => setIsMenuOpen(false)}
+              </button>
+              <button
+                onClick={(e) => handleNavClick('#techniques', e)}
+                className="text-gray-300 hover:text-white font-medium transition-all duration-300 py-2 px-4 rounded-lg hover:bg-white/5 text-left"
               >
                 Techniques
-              </a>
+              </button>
               <Link
                 to="/tool"
                 className="group relative overflow-hidden px-6 py-3 rounded-xl font-semibold text-white transition-all duration-500 transform hover:scale-105 text-center"
