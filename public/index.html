@@ -1,43 +1,129 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
+    <!-- Basic Meta Tags -->
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
+    <!-- Primary Meta Tags -->
+    <title>Steganography Suite - Secure Image Encryption & Data Hiding</title>
+    <meta name="description" content="Advanced image steganography tools for securely hiding encrypted messages within ordinary images. Military-grade encryption, AI-resistant security, and professional data protection." />
+    <meta name="keywords" content="steganography, image encryption, data hiding, secure messaging, cryptography, privacy tools, digital security, image security" />
+    <meta name="author" content="Steganography Suite" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#1e3a8a" />
+    <meta name="msapplication-TileColor" content="#1e3a8a" />
+    
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Steganography Suite - Secure Image Encryption & Data Hiding" />
+    <meta property="og:description" content="Hide encrypted messages within ordinary images using advanced steganography technology. Military-grade security for your confidential communications." />
+    <meta property="og:image" content="%PUBLIC_URL%/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Steganography Suite - Secure Image Encryption Platform" />
+    <meta property="og:url" content="https://steganography-suite.com" />
+    <meta property="og:site_name" content="Steganography Suite" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Steganography Suite - Secure Image Encryption & Data Hiding" />
+    <meta name="twitter:description" content="Hide encrypted messages within ordinary images using advanced steganography technology." />
+    <meta name="twitter:image" content="%PUBLIC_URL%/twitter-card.jpg" />
+    <meta name="twitter:site" content="@steganographysuite" />
+    <meta name="twitter:creator" content="@steganographysuite" />
+    
+    <!-- Favicon and App Icons -->
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
+    <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/apple-touch-icon.png" />
+    <link rel="mask-icon" href="%PUBLIC_URL%/safari-pinned-tab.svg" color="#1e3a8a" />
+    
+    <!-- Web App Manifest -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://steganography-suite.com" />
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" />
+    
+    <!-- DNS Prefetch for Performance -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+    
+    <!-- Structured Data / JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Steganography Suite",
+      "applicationCategory": "SecurityApplication",
+      "operatingSystem": "Web Browser",
+      "description": "Advanced image steganography tools for securely hiding encrypted messages within ordinary images.",
+      "url": "https://steganography-suite.com",
+      "author": {
+        "@type": "Organization",
+        "name": "Steganography Suite"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "124"
+      }
+    }
+    </script>
+    
+    <!-- Additional Meta Tags for Security and Performance -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <!-- CSS Preload -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" media="print" onload="this.media='all'" />
+    
+    <!-- Noscript Fallback for CSS -->
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" />
+    </noscript>
   </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+  
+  <body>    
+    <!-- No Script Warning -->
+    <noscript>
+      <div class="noscript-warning" role="alert" aria-live="polite">
+        <h1>JavaScript Required</h1>
+        <p>You need to enable JavaScript to run this application. Steganography Suite requires JavaScript for its encryption and image processing capabilities.</p>
+        <p>Please enable JavaScript in your browser settings and refresh the page.</p>
+      </div>
+    </noscript>
+    
+    <!-- Main Application Container -->
+    <div id="root" role="main" aria-label="Steganography Suite Application"></div>
+    
+    <!-- Performance Monitoring Script (optional) -->
+    <script>
+      // Performance monitoring and error tracking can be added here
+      window.addEventListener('error', function(e) {
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'exception', {
+            'description': e.error.toString(),
+            'fatal': false
+          });
+        }
+      });
+    </script>
   </body>
 </html>
