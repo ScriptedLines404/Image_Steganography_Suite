@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SteganographyAPI from '../services/api';
 
 const SteganographyTool = () => {
@@ -6,6 +6,7 @@ const SteganographyTool = () => {
   const [coverImage, setCoverImage] = useState(null);
   const [coverImageFile, setCoverImageFile] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [apiStatus, setApiStatus] = useState('checking');
   
   const [technique, setTechnique] = useState('lsb');
   const [secretText, setSecretText] = useState('');
@@ -14,6 +15,21 @@ const SteganographyTool = () => {
   const [extractedText, setExtractedText] = useState('');
   const [originalFileName, setOriginalFileName] = useState('');
   const [error, setError] = useState('');
+
+  // Check API status on component mount
+  useEffect(() => {
+    checkApiStatus();
+  }, []);
+
+  const checkApiStatus = async () => {
+    try {
+      await SteganographyAPI.healthCheck();
+      setApiStatus('connected');
+    } catch (error) {
+      setApiStatus('disconnected');
+      setError('Backend server is not running. Please start the Python backend on port 5000.');
+    }
+  };
 
   const handleCoverImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -47,6 +63,11 @@ const SteganographyTool = () => {
   };
 
   const handleProcess = async () => {
+    if (apiStatus === 'disconnected') {
+      setError('Backend server is not running. Please start the Python backend.');
+      return;
+    }
+
     if (!coverImageFile) {
       setError('Please select an image first');
       return;
@@ -67,7 +88,6 @@ const SteganographyTool = () => {
 
     try {
       if (activeTab === 'hide') {
-        // Hide data
         const result = await SteganographyAPI.hideData(
           technique,
           coverImageFile,
@@ -82,7 +102,6 @@ const SteganographyTool = () => {
           setError(result.error || 'Failed to hide data');
         }
       } else {
-        // Extract data
         const result = await SteganographyAPI.extractData(
           technique,
           coverImageFile,
@@ -144,6 +163,17 @@ const SteganographyTool = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 relative overflow-hidden font-sans py-8">
+      {/* API Status Indicator */}
+      <div className={`fixed top-4 right-4 px-4 py-2 rounded-lg text-sm font-semibold z-50 ${
+        apiStatus === 'connected' ? 'bg-green-600 text-white' : 
+        apiStatus === 'disconnected' ? 'bg-red-600 text-white' : 
+        'bg-yellow-600 text-white'
+      }`}>
+        {apiStatus === 'connected' ? '✅ API Connected' : 
+         apiStatus === 'disconnected' ? '❌ API Disconnected' : 
+         '🔍 Checking API...'}
+      </div>
+
       {/* Animated background elements matching Hero section */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Floating pixels/particles */}
@@ -394,34 +424,36 @@ const SteganographyTool = () => {
             )}
 
             {/* Action Buttons */}
-            <button 
-                    onClick={handleProcess}
-                    disabled={isProcessing || !coverImage || (activeTab === 'hide' && !secretText) || (technique !== 'lsb' && !encryptionKey)}
-                    className="group relative overflow-hidden px-8 py-3 rounded-2xl font-bold text-lg transition-all duration-500 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex-1 max-w-xs"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:from-blue-500 group-hover:to-purple-500 transition-all duration-300"></div>
-                    <span className="relative z-10 text-white flex items-center justify-center">
-                      {isProcessing ? (
-                        <>
-                          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                          Processing...
-                        </>
-                      ) : (
-                        activeTab === 'hide' ? `Hide with ${technique.toUpperCase()}` : `Extract with ${technique.toUpperCase()}`
-                      )}
-                    </span>
-                  </button>
-              
-              <button 
-                onClick={handleReset}
-                className="px-6 py-3 bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white rounded-2xl border border-white/10 hover:border-white/20 transition-all duration-300 transform hover:scale-105"
-              >
-                Reset
-              </button>
-            </div>
+            <div className="flex gap-4 justify-center mt-8">
+                    <button 
+                      onClick={handleProcess}
+                      disabled={isProcessing || !coverImage || (activeTab === 'hide' && !secretText) || (technique !== 'lsb' && !encryptionKey) || apiStatus === 'disconnected'}
+                      className="group relative overflow-hidden px-8 py-3 rounded-2xl font-bold text-lg transition-all duration-500 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex-1 max-w-md"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:from-blue-500 group-hover:to-purple-500 transition-all duration-300"></div>
+                      <span className="relative z-10 text-white flex items-center justify-center">
+                        {isProcessing ? (
+                          <>
+                            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Processing...
+                          </>
+                        ) : (
+                          activeTab === 'hide' ? `Hide with ${technique.toUpperCase()}` : `Extract with ${technique.toUpperCase()}`
+                        )}
+                      </span>
+                    </button>
+                    
+                    {/* Reset button moved more to the right with ml-auto */}
+                    <button 
+                      onClick={handleReset}
+                      className="px-8 py-3 bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white rounded-2xl border border-white/10 hover:border-white/20 transition-all duration-300 transform hover:scale-105 ml-4"
+                    >
+                      Reset All
+                    </button>
+                  </div>
 
             {/* Results Section */}
             {(resultImage || extractedText) && (
@@ -536,6 +568,7 @@ const SteganographyTool = () => {
             </div>
           </div>
         </div>
+      </div>
       </div>
   );
 };
