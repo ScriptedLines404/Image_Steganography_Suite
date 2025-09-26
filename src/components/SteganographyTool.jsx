@@ -1,113 +1,138 @@
 import React, { useState } from 'react';
+import SteganographyAPI from '../services/api';
 
 const SteganographyTool = () => {
   const [activeTab, setActiveTab] = useState('hide');
   const [coverImage, setCoverImage] = useState(null);
-  const [secretImage, setSecretImage] = useState(null);
-  const [coverExample, setCoverExample] = useState('N/A');
-  const [secretExample, setSecretExample] = useState('N/A');
+  const [coverImageFile, setCoverImageFile] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   
-  // New state variables for enhanced functionality
-  const [technique, setTechnique] = useState('lsb'); // 'lsb', 'xor', 'aes'
+  const [technique, setTechnique] = useState('lsb');
   const [secretText, setSecretText] = useState('');
   const [encryptionKey, setEncryptionKey] = useState('');
   const [resultImage, setResultImage] = useState(null);
   const [extractedText, setExtractedText] = useState('');
   const [originalFileName, setOriginalFileName] = useState('');
+  const [error, setError] = useState('');
 
-  // Define the function properly at the component level
   const handleCoverImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setCoverImage(URL.createObjectURL(file));
-      setOriginalFileName(file.name.replace(/\.[^/.]+$/, "")); // Store original filename without extension
+      setCoverImageFile(file);
+      setOriginalFileName(file.name.replace(/\.[^/.]+$/, ""));
+      setError('');
     }
   };
 
-  // Function to handle technique change
   const handleTechniqueChange = (newTechnique) => {
-    // Reset all states when technique changes
     setTechnique(newTechnique);
-    setCoverImage(null);
-    setSecretText('');
-    setEncryptionKey('');
-    setResultImage(null);
-    setExtractedText('');
-    setOriginalFileName('');
+    resetAllStates();
   };
 
-  // Function to handle tab change
   const handleTabChange = (newTab) => {
-    // Reset all states when tab changes
     setActiveTab(newTab);
+    resetAllStates();
+  };
+
+  const resetAllStates = () => {
     setCoverImage(null);
+    setCoverImageFile(null);
     setSecretText('');
     setEncryptionKey('');
     setResultImage(null);
     setExtractedText('');
     setOriginalFileName('');
+    setError('');
   };
 
-  const handleProcess = () => {
+  const handleProcess = async () => {
+    if (!coverImageFile) {
+      setError('Please select an image first');
+      return;
+    }
+
+    if (activeTab === 'hide' && !secretText) {
+      setError('Please enter secret text to hide');
+      return;
+    }
+
+    if (technique !== 'lsb' && !encryptionKey) {
+      setError('Encryption key is required for this technique');
+      return;
+    }
+
     setIsProcessing(true);
-    
-    // Simulate processing based on selected technique
-    setTimeout(() => {
-      setIsProcessing(false);
-      
+    setError('');
+
+    try {
       if (activeTab === 'hide') {
-        // Simulate successful hiding
-        setResultImage(coverImage); // In real implementation, this would be the processed image
-        setExtractedText('');
+        // Hide data
+        const result = await SteganographyAPI.hideData(
+          technique,
+          coverImageFile,
+          secretText,
+          encryptionKey
+        );
+
+        if (result.success) {
+          setResultImage(result.stego_image_url);
+          setExtractedText('');
+        } else {
+          setError(result.error || 'Failed to hide data');
+        }
       } else {
-        // Simulate successful extraction - FIXED: Use actual secretText instead of demo text
-        setExtractedText(secretText || "No hidden message found"); // Use actual text or default message
-        setResultImage(null);
+        // Extract data
+        const result = await SteganographyAPI.extractData(
+          technique,
+          coverImageFile,
+          encryptionKey
+        );
+
+        if (result.success) {
+          setExtractedText(result.extracted_text);
+          setResultImage(null);
+        } else {
+          setError(result.error || 'Failed to extract data');
+        }
       }
-    }, 2000);
+    } catch (error) {
+      console.error('Processing error:', error);
+      setError(error.message || 'An error occurred during processing');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleReset = () => {
-    setCoverImage(null);
-    setSecretText('');
-    setEncryptionKey('');
-    setResultImage(null);
-    setExtractedText('');
-    setOriginalFileName('');
+    resetAllStates();
   };
 
-  // Function to download the result image
   const downloadResultImage = () => {
     if (!resultImage) return;
 
-    // Create a temporary anchor element
     const link = document.createElement('a');
     link.href = resultImage;
-    
-    // Generate filename based on technique and original filename
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const techniqueName = technique.toUpperCase();
     const originalName = originalFileName || 'stego';
     link.download = `${originalName}_${techniqueName}_${timestamp}.png`;
     
-    // Trigger download
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
-  // Function to copy extracted text to clipboard
   const copyToClipboard = () => {
     if (!extractedText) return;
     
     navigator.clipboard.writeText(extractedText)
       .then(() => {
-        // You could add a temporary success message here
         alert('Text copied to clipboard!');
       })
       .catch(err => {
         console.error('Failed to copy text: ', err);
+        setError('Failed to copy text to clipboard');
       });
   };
 
@@ -356,28 +381,39 @@ const SteganographyTool = () => {
               </div>
             )}
 
+            {/* Add error display */}
+            {error && (
+              <div className="mb-8 p-4 bg-red-900/50 border border-red-500/30 rounded-xl">
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="text-red-300">{error}</span>
+                </div>
+              </div>
+            )}
+
             {/* Action Buttons */}
-            <div className="flex gap-4 justify-center mt-8">
-              <button 
-                onClick={handleProcess}
-                disabled={isProcessing || !coverImage || (activeTab === 'hide' && !secretText) || (technique !== 'lsb' && !encryptionKey)}
-                className="group relative overflow-hidden px-8 py-3 rounded-2xl font-bold text-lg transition-all duration-500 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex-1 max-w-xs"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:from-blue-500 group-hover:to-purple-500 transition-all duration-300"></div>
-                <span className="relative z-10 text-white flex items-center justify-center">
-                  {isProcessing ? (
-                    <>
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Processing...
-                    </>
-                  ) : (
-                    activeTab === 'hide' ? `Hide with ${technique.toUpperCase()}` : `Extract with ${technique.toUpperCase()}`
-                  )}
-                </span>
-              </button>
+            <button 
+                    onClick={handleProcess}
+                    disabled={isProcessing || !coverImage || (activeTab === 'hide' && !secretText) || (technique !== 'lsb' && !encryptionKey)}
+                    className="group relative overflow-hidden px-8 py-3 rounded-2xl font-bold text-lg transition-all duration-500 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex-1 max-w-xs"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:from-blue-500 group-hover:to-purple-500 transition-all duration-300"></div>
+                    <span className="relative z-10 text-white flex items-center justify-center">
+                      {isProcessing ? (
+                        <>
+                          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Processing...
+                        </>
+                      ) : (
+                        activeTab === 'hide' ? `Hide with ${technique.toUpperCase()}` : `Extract with ${technique.toUpperCase()}`
+                      )}
+                    </span>
+                  </button>
               
               <button 
                 onClick={handleReset}
@@ -501,7 +537,6 @@ const SteganographyTool = () => {
           </div>
         </div>
       </div>
-    </div>
   );
 };
 
