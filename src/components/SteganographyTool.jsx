@@ -60,7 +60,12 @@ const SteganographyTool = () => {
     setExtractedText('');
     setOriginalFileName('');
     setError('');
-  };
+
+  const fileInput = document.getElementById('cover-input');
+  if (fileInput) {
+    fileInput.value = '';
+  }
+};
 
   const handleProcess = async () => {
     if (apiStatus === 'disconnected') {
@@ -164,14 +169,20 @@ const SteganographyTool = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 relative overflow-hidden font-sans py-8">
       {/* API Status Indicator */}
-      <div className={`fixed top-4 right-4 px-4 py-2 rounded-lg text-sm font-semibold z-50 ${
-        apiStatus === 'connected' ? 'bg-green-600 text-white' : 
-        apiStatus === 'disconnected' ? 'bg-red-600 text-white' : 
-        'bg-yellow-600 text-white'
-      }`}>
-        {apiStatus === 'connected' ? '✅ API Connected' : 
-         apiStatus === 'disconnected' ? '❌ API Disconnected' : 
-         '🔍 Checking API...'}
+      <div className="flex items-center justify-center mb-2">
+        <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+          apiStatus === 'connected' ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 
+          apiStatus === 'disconnected' ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 
+          'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+        }`}>
+          <span className={`w-2 h-2 rounded-full mr-2 ${
+            apiStatus === 'connected' ? 'bg-green-400 animate-pulse' :
+            apiStatus === 'disconnected' ? 'bg-red-400' : 'bg-yellow-400 animate-ping'
+          }`}></span>
+          {apiStatus === 'connected' ? 'API Connected' : 
+          apiStatus === 'disconnected' ? 'API Disconnected' : 
+          'Checking Connection...'}
+        </div>
       </div>
 
       {/* Animated background elements matching Hero section */}
@@ -299,43 +310,59 @@ const SteganographyTool = () => {
           <div className="absolute -inset-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
           <div className="relative bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-lg rounded-2xl p-8 border border-white/10">
             
-            {/* Cover Image Section */}
-            <div className="space-y-6 mb-8">
-              <h3 className="text-xl font-bold text-white">
-                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                  {activeTab === 'hide' ? 'Cover Image:' : 'Stego Image:'}
-                </span>
-              </h3>
-              
-              <div className="flex items-center space-x-4">
-                <label className="flex-1 group/file">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleCoverImageChange}
-                    className="hidden"
-                    id="cover-input"
-                  />
-                  <div className="w-full py-3 px-4 bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 transform hover:scale-105 text-center cursor-pointer font-medium">
-                    Choose Image
-                  </div>
-                </label>
-                <span className="text-sm text-gray-400 flex-1">
-                  {coverImage ? '📁 Image selected' : 'No file chosen'}
-                </span>
+        {/* Cover Image Section */}
+        <div className="space-y-6 mb-8">
+          <h3 className="text-xl font-bold text-white">
+            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              {activeTab === 'hide' ? 'Cover Image:' : 'Stego Image:'}
+            </span>
+          </h3>
+          
+          <div className="flex items-center space-x-4">
+            <label className="flex-1 group/file">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleCoverImageChange}
+                className="hidden"
+                id="cover-input"
+                key={coverImage ? 'has-file' : 'no-file'} />
+              <div className="w-full py-3 px-4 bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 transform hover:scale-105 text-center cursor-pointer font-medium">
+                {coverImage ? 'Change Image' : 'Choose Image'}
               </div>
+            </label>
+            <span className="text-sm text-gray-400 flex-1">
+              {coverImage ? '📁 Image selected' : 'No file chosen'}
+            </span>
+            
+            {/* Clear Button - Only show when image is selected */}
+            {coverImage && (
+              <button 
+                onClick={() => {
+                  setCoverImage(null);
+                  setCoverImageFile(null);
+                  const fileInput = document.getElementById('cover-input');
+                  if (fileInput) fileInput.value = '';
+                }}
+                className="px-4 py-3 bg-red-600/50 hover:bg-red-600 text-white rounded-xl border border-red-500/30 transition-all duration-300"
+              >
+                Clear
+              </button>
+            )}
+          </div>
 
-              {coverImage && (
-                <div className="mt-4 p-4 bg-gray-800/30 rounded-xl border border-white/5">
-                  <h4 className="text-sm font-medium text-gray-400 mb-2">Image Preview:</h4>
-                  <img 
-                    src={coverImage} 
-                    alt="Image preview" 
-                    className="w-32 h-32 object-cover rounded-lg border-2 border-blue-500/30 shadow-lg"
-                  />
-                </div>
-              )}
+          {/* Image Preview - Only show when image is selected */}
+          {coverImage && (
+            <div className="mt-4 p-4 bg-gray-800/30 rounded-xl border border-white/5">
+              <h4 className="text-sm font-medium text-gray-400 mb-2">Image Preview:</h4>
+              <img 
+                src={coverImage} 
+                alt="Image preview" 
+                className="w-32 h-32 object-cover rounded-lg border-2 border-blue-500/30 shadow-lg"
+              />
             </div>
+          )}
+        </div>
 
             {/* Data Input Section */}
             {activeTab === 'hide' && (
