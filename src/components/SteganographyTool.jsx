@@ -25,6 +25,30 @@ const SteganographyTool = () => {
     }
   };
 
+  // Function to handle technique change
+  const handleTechniqueChange = (newTechnique) => {
+    // Reset all states when technique changes
+    setTechnique(newTechnique);
+    setCoverImage(null);
+    setSecretText('');
+    setEncryptionKey('');
+    setResultImage(null);
+    setExtractedText('');
+    setOriginalFileName('');
+  };
+
+  // Function to handle tab change
+  const handleTabChange = (newTab) => {
+    // Reset all states when tab changes
+    setActiveTab(newTab);
+    setCoverImage(null);
+    setSecretText('');
+    setEncryptionKey('');
+    setResultImage(null);
+    setExtractedText('');
+    setOriginalFileName('');
+  };
+
   const handleProcess = () => {
     setIsProcessing(true);
     
@@ -37,8 +61,8 @@ const SteganographyTool = () => {
         setResultImage(coverImage); // In real implementation, this would be the processed image
         setExtractedText('');
       } else {
-        // Simulate successful extraction
-        setExtractedText(secretText || 'THIS IS A SECRET MESSAGE'); // Demo text
+        // Simulate successful extraction - FIXED: Use actual secretText instead of demo text
+        setExtractedText(secretText || "No hidden message found"); // Use actual text or default message
         setResultImage(null);
       }
     }, 2000);
@@ -150,7 +174,7 @@ const SteganographyTool = () => {
               ].map((tech) => (
                 <div
                   key={tech.value}
-                  onClick={() => setTechnique(tech.value)}
+                  onClick={() => handleTechniqueChange(tech.value)}
                   className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 transform hover:scale-105 ${
                     technique === tech.value
                       ? 'border-blue-500 bg-blue-500/20'
@@ -178,7 +202,7 @@ const SteganographyTool = () => {
         {/* Tab Selection */}
         <div className="grid grid-cols-2 gap-6 mb-8 max-w-md mx-auto">
           <button
-            onClick={() => setActiveTab('hide')}
+            onClick={() => handleTabChange('hide')}
             className={`group relative overflow-hidden py-4 px-6 rounded-2xl font-semibold text-lg transition-all duration-500 transform hover:scale-105 ${
               activeTab === 'hide'
                 ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-2xl'
@@ -196,7 +220,7 @@ const SteganographyTool = () => {
           </button>
           
           <button
-            onClick={() => setActiveTab('unhide')}
+            onClick={() => handleTabChange('unhide')}
             className={`group relative overflow-hidden py-4 px-6 rounded-2xl font-semibold text-lg transition-all duration-500 transform hover:scale-105 ${
               activeTab === 'unhide'
                 ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-2xl'
@@ -224,7 +248,7 @@ const SteganographyTool = () => {
             <div className="space-y-6 mb-8">
               <h3 className="text-xl font-bold text-white">
                 <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                  Image:
+                  {activeTab === 'hide' ? 'Cover Image:' : 'Stego Image:'}
                 </span>
               </h3>
               
@@ -248,10 +272,10 @@ const SteganographyTool = () => {
 
               {coverImage && (
                 <div className="mt-4 p-4 bg-gray-800/30 rounded-xl border border-white/5">
-                  <h4 className="text-sm font-medium text-gray-400 mb-2">Cover Preview:</h4>
+                  <h4 className="text-sm font-medium text-gray-400 mb-2">Image Preview:</h4>
                   <img 
                     src={coverImage} 
-                    alt="Cover preview" 
+                    alt="Image preview" 
                     className="w-32 h-32 object-cover rounded-lg border-2 border-blue-500/30 shadow-lg"
                   />
                 </div>
@@ -285,22 +309,22 @@ const SteganographyTool = () => {
                   </div>
                   
                   {technique !== 'lsb' && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
-                          Encryption Key:
-                        </label>
-                        <input
-                          type="password"
-                          value={encryptionKey}
-                          onChange={(e) => setEncryptionKey(e.target.value)}
-                          placeholder="Enter your encryption key..."
-                          className="w-full p-3 bg-gray-800/50 border border-white/10 rounded-xl text-gray-300 focus:outline-none focus:border-blue-500 transition-colors duration-300"
-                        />
-                        <div className="text-xs text-gray-500 mt-1">
-                          Required for {technique.toUpperCase()} decryption
-                        </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Encryption Key:
+                      </label>
+                      <input
+                        type="password"
+                        value={encryptionKey}
+                        onChange={(e) => setEncryptionKey(e.target.value)}
+                        placeholder="Enter your encryption key..."
+                        className="w-full p-3 bg-gray-800/50 border border-white/10 rounded-xl text-gray-300 focus:outline-none focus:border-blue-500 transition-colors duration-300"
+                      />
+                      <div className="text-xs text-gray-500 mt-1">
+                        Required for {technique.toUpperCase()} decryption
                       </div>
-                    )}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
