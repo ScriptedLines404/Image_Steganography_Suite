@@ -42,7 +42,7 @@ const Footer = () => {
           {/* Copyright */}
           <div className="border-t border-gray-800 mt-6 pt-6 text-center">
             <p className="text-gray-500 text-16px">
-              &copy; {new Date().getFullYear()} Vladimir Illich Arunan V V • v1.0.0
+              <a href="https://github.com/ScriptedLines404/Image_Steganography_Suite/blob/main/LICENSE">&copy; {new Date().getFullYear()} Vladimir Illich Arunan V V • v1.0.0</a>
             </p>
           </div>
         </div>
