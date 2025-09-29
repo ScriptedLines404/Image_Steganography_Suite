@@ -32,6 +32,13 @@ app = Flask(__name__)
 # Configure CORS properly for React development server
 CORS(app)
 
+allowed_origins = [
+    "http://localhost:3000",
+    "https://steganography-frontend.onrender.com"
+]
+
+CORS(app, origins=allowed_origins)
+
 # Configuration
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
