@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: steganography-suite
+    env: static
+    buildCommand: npm run build
+    publishDir: build
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://your-backend-service.onrender.com

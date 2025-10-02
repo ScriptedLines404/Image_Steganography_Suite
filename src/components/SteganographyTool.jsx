@@ -61,7 +61,7 @@ const SteganographyTool = () => {
     setOriginalFileName('');
     setError('');
 
-  const fileInput = document.getElementById('cover-input');
+  const fileInput = document.getElementById('cover-input');  
   if (fileInput) {
     fileInput.value = '';
   }
