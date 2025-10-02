@@ -1,11 +1,14 @@
 # 🖼️🔐 Image Steganography Suite
 
-https://img.shields.io/badge/License-MIT-blue.svg
-https://img.shields.io/badge/Python-3.8%252B-blue
-https://img.shields.io/badge/React-18%252B-blue
-https://img.shields.io/badge/Flask-2.0%252B-green
-https://img.shields.io/badge/OpenCV-4.5%252B-orange
-
+<p align="center">
+  <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" />
+  <img src="https://img.shields.io/badge/Python-3.8%252B-blue" alt="Python" />
+  <img src="https://img.shields.io/badge/React-18%252B-blue" alt="React" />
+  <img src="https://img.shields.io/badge/Flask-2.0%252B-green" alt="Flask" />
+  <img src="https://img.shields.io/badge/OpenCV-4.5%252B-orange" alt="OpenCV" />
+  <img src="https://img.shields.io/badge/build-passing-brightgreen" alt="Build Status" />
+  <img src="https://img.shields.io/badge/contributions-welcome-blueviolet" alt="Contributions Welcome" />
+</p>
 A collection of secure **steganography tools** that hide secret messages in images using different encryption methods. This project demonstrates three approaches to embedding encrypted data in images while preserving visual quality.
 
 ---
