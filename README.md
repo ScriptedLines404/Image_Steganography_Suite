@@ -1,7 +1,7 @@
 # 🖼️🔐 Image Steganography Suite
 
 <p align="center">
-  <a href= "https://github.com/ScriptedLines404/Image_Steganography_Suite/LICENSE"> <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
+  <a href= "#LICENSE"> <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
   <img src="https://img.shields.io/badge/Python-3.8%252B-blue" alt="Python" />
   <img src="https://img.shields.io/badge/React-18%252B-blue" alt="React" />
   <img src="https://img.shields.io/badge/Flask-2.0%252B-green" alt="Flask" />
