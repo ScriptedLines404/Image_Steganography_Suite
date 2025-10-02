@@ -64,7 +64,7 @@ Image_Steganography_Suite/
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone https://github.com/your-username/Image_Steganography_Suite.git
+git clone https://github.com/ScriptedLines404/Image_Steganography_Suite.git
 cd Image_Steganography_Suite
 ```
 
@@ -73,7 +73,7 @@ cd Image_Steganography_Suite
 ```bash
 cd api
 python -m venv venv
-source venv/bin/activate   # On Windows: venv\Scripts\activate
+venv\Scripts\activate   # On Mac: source venv/bin/activate
 pip install -r requirements.txt
 ```
 
