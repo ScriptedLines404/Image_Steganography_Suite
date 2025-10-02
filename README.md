@@ -9,6 +9,7 @@
   <img src="https://img.shields.io/badge/build-passing-brightgreen" alt="Build Status" />
   <img src="https://img.shields.io/badge/contributions-welcome-blueviolet" alt="Contributions Welcome" />
 </p>
+
 A collection of secure **steganography tools** that hide secret messages in images using different encryption methods. This project demonstrates three approaches to embedding encrypted data in images while preserving visual quality.
 
 ---
