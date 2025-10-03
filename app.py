@@ -35,21 +35,40 @@ except ImportError as e:
 
 app = Flask(__name__)
 
-# FIX 1: Simple CORS - allow all origins (quickest solution)
-CORS(app)
+# ==================== CORS FIX ====================
+# Configure CORS properly for your frontend domain
+CORS(app, resources={
+    r"/api/*": {
+        "origins": [
+            "https://image-steganography-suite.onrender.com",  # Your actual frontend URL
+            "http://localhost:3000"
+        ],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization", "Accept"],
+        "supports_credentials": False
+    }
+})
 
-# FIX 2: Manual CORS headers as backup
+# Add CORS headers manually as backup
 @app.after_request
 def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    origin = request.headers.get('Origin')
+    allowed_origins = [
+        "https://image-steganography-suite.onrender.com",
+        "http://localhost:3000"
+    ]
+    
+    if origin in allowed_origins:
+        response.headers.add('Access-Control-Allow-Origin', origin)
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,Accept')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
 
-# FIX 3: Handle OPTIONS preflight requests
+# Handle preflight OPTIONS requests
 @app.route('/api/<path:path>', methods=['OPTIONS'])
 def options_handler(path):
     return '', 200
+# ==================== END CORS FIX ====================
 
 # Configuration
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
