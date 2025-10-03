@@ -6,4 +6,4 @@ services:
     publishDir: build
     envVars:
       - key: REACT_APP_API_URL
-        value: https://your-backend-service.onrender.com
+        value: https://steganography-backend-32br.onrender.com
