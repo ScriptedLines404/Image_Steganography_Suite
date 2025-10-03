@@ -32,14 +32,14 @@ const SteganographyTool = () => {
   };
 
   const handleCoverImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setCoverImage(URL.createObjectURL(file));
-      setCoverImageFile(file);
-      setOriginalFileName(file.name.replace(/\.[^/.]+$/, ""));
-      setError('');
-    }
-  };
+  if (e.target.files && e.target.files[0]) {
+    const file = e.target.files[0];
+    setCoverImage(URL.createObjectURL(file)); 
+    setCoverImageFile(file);  
+    setOriginalFileName(file.name.replace(/\.[^/.]+$/, ""));
+    setError('');
+  }
+};
 
   const handleTechniqueChange = (newTechnique) => {
     setTechnique(newTechnique);
@@ -127,7 +127,7 @@ const SteganographyTool = () => {
       setIsProcessing(false);
     }
   };
-
+  
   const handleReset = () => {
     resetAllStates();
   };

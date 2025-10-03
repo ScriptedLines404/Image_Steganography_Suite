@@ -1,24 +1,34 @@
 const API_BASE_URL = 'https://steganography-backend-32br.onrender.com';
 
 class SteganographyAPI {
-  static async healthCheck() {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/health`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return await response.json();
-    } catch (error) {
-      console.error('Health check error:', error);
-      throw new Error(`Cannot connect to backend: ${error.message}`);
+    static async imageToBase64(file) {
+        console.log('Converting file to base64:', file.name, file.type, file.size);
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    const base64 = reader.result.split(',')[1];
+                    console.log('Base64 conversion successful, length:', base64.length);
+                    resolve(base64);
+                } catch (error) {
+                    reject(new Error('Failed to process image data'));
+                }
+            };
+            reader.onerror = error => {
+                console.error('FileReader error:', error);
+                reject(new Error('Failed to read image file'));
+            };
+            reader.readAsDataURL(file);
+        });
     }
-  }
 
     static async base64ToImageUrl(base64String) {
         return `data:image/png;base64,${base64String}`;
     }
 
     static async makeApiCall(endpoint, payload) {
+        console.log('Making API call to:', endpoint, 'Payload size:', JSON.stringify(payload).length);
+        
         try {
             const response = await fetch(`${API_BASE_URL}${endpoint}`, {
                 method: 'POST',
@@ -34,19 +44,20 @@ class SteganographyAPI {
                     const errorData = await response.json();
                     errorMessage = errorData.error || errorMessage;
                 } catch (e) {
-                    // If response is not JSON, use status text
                     errorMessage = response.statusText || errorMessage;
                 }
                 throw new Error(errorMessage);
             }
 
-            return await response.json();
+            const result = await response.json();
+            console.log('API call successful:', result.success);
+            return result;
+            
         } catch (error) {
             console.error(`API call error for ${endpoint}:`, error);
             
-            // Enhanced error messages
             if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                throw new Error('Cannot connect to server. Please make sure the backend is running on port 5000.');
+                throw new Error('Cannot connect to backend server. Please check if the server is running.');
             }
             
             throw error;
@@ -83,17 +94,6 @@ class SteganographyAPI {
         };
 
         return await this.makeApiCall('/api/extract', payload);
-    }
-
-    static async checkCapacity(technique, imageFile) {
-        const imageBase64 = await this.imageToBase64(imageFile);
-        
-        const payload = {
-            technique: technique,
-            image: imageBase64
-        };
-
-        return await this.makeApiCall('/api/capacity', payload);
     }
 
     static async healthCheck() {
