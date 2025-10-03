@@ -8,14 +8,12 @@ import traceback
 import sys
 import os
 
-# Add the steganography directory to Python path
-current_dir = os.path.dirname(os.path.abspath(__file__))
-steganography_path = os.path.join(current_dir, 'steganography')
-sys.path.insert(0, steganography_path)
+print(f"🔍 Current directory: {os.path.dirname(os.path.abspath(__file__))}")
+print("📁 Directory contents:")
+for file in os.listdir('.'):
+    print(f"   - {file}")
 
-print(f"🔍 Looking for steganography modules in: {steganography_path}")
-
-# Import your steganography modules
+# Import your steganography modules directly (they're in root)
 try:
     from aes_steganography import AESSteganography
     from lsb_steganography import LSBSteganography
@@ -23,21 +21,22 @@ try:
     print("✅ Steganography modules imported successfully")
 except ImportError as e:
     print(f"❌ Error importing steganography modules: {e}")
-    print("📁 Current directory contents:")
-    for file in os.listdir(steganography_path):
-        print(f"   - {file}")
     traceback.print_exc()
+    # Create fallback classes to prevent crashes
+    class AESSteganography:
+        def hide_data(self, *args, **kwargs): raise Exception("AES module not loaded")
+        def extract_data(self, *args, **kwargs): raise Exception("AES module not loaded")
+    class LSBSteganography:
+        def hide_data(self, *args, **kwargs): raise Exception("LSB module not loaded")
+        def extract_data(self, *args, **kwargs): raise Exception("LSB module not loaded")
+    class XORSteganography:
+        def hide_data(self, *args, **kwargs): raise Exception("XOR module not loaded")
+        def extract_data(self, *args, **kwargs): raise Exception("XOR module not loaded")
 
 app = Flask(__name__)
-# Configure CORS properly for React development server
+
+# Configure CORS properly for all origins (simpler for deployment)
 CORS(app)
-
-allowed_origins = [
-    "http://localhost:3000",
-    "https://steganography-frontend.onrender.com"
-]
-
-CORS(app, origins=allowed_origins)
 
 # Configuration
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
@@ -246,6 +245,7 @@ def extract_data():
         traceback.print_exc()
         return jsonify({"error": f"Extraction failed: {str(e)}"}), 500
 
+# Single main block
 if __name__ == '__main__':
     print("🚀 Starting Steganography API Server...")
     print(f"🐍 Python version: {sys.version}")
@@ -254,6 +254,5 @@ if __name__ == '__main__':
     print("   POST /api/hide")
     print("   POST /api/extract")
     
-if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port, debug=False)
