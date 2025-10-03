@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://steganography-backend-32br.onrender.com';
 
 class SteganographyAPI {
     static async imageToBase64(file) {

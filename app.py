@@ -36,7 +36,16 @@ except ImportError as e:
 app = Flask(__name__)
 
 # Configure CORS properly for all origins (simpler for deployment)
-CORS(app)
+CORS(app, resources={
+    r"/api/*": {
+        "origins": [
+            "https://steganography-suite.onrender.com",  # Your frontend URL
+            "http://localhost:3000"  # For local development
+        ],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
 
 # Configuration
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
