@@ -12,6 +12,8 @@
 
 A collection of secure **steganography tools** that hide secret messages in images using different encryption methods. This project demonstrates three approaches to embedding encrypted data in images while preserving visual quality.
 
+🌐 Live Demo: [Image Steganography Suite](https://image-steganography-suite.onrender.com)
+
 ---
 
 ## 🔐 Supported Techniques
