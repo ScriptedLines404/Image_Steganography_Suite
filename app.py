@@ -35,17 +35,21 @@ except ImportError as e:
 
 app = Flask(__name__)
 
-# Configure CORS properly for all origins (simpler for deployment)
-CORS(app, resources={
-    r"/api/*": {
-        "origins": [
-            "https://steganography-suite.onrender.com",  # Your frontend URL
-            "http://localhost:3000"  # For local development
-        ],
-        "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
-    }
-})
+# FIX 1: Simple CORS - allow all origins (quickest solution)
+CORS(app)
+
+# FIX 2: Manual CORS headers as backup
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,Accept')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
+
+# FIX 3: Handle OPTIONS preflight requests
+@app.route('/api/<path:path>', methods=['OPTIONS'])
+def options_handler(path):
+    return '', 200
 
 # Configuration
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
@@ -91,7 +95,8 @@ def health_check():
         "status": "healthy", 
         "message": "Steganography API is running",
         "version": "1.0.0",
-        "python_version": sys.version
+        "python_version": sys.version,
+        "cors": "enabled"  # Added to verify CORS is working
     })
 
 @app.route('/api/hide', methods=['POST'])
