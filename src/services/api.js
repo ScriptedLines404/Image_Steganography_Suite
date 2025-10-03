@@ -1,18 +1,18 @@
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://steganography-backend-32br.onrender.com';
+const API_BASE_URL = 'https://steganography-backend-32br.onrender.com';
 
 class SteganographyAPI {
-    static async imageToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-                // Remove the data URL prefix
-                const base64 = reader.result.split(',')[1];
-                resolve(base64);
-            };
-            reader.onerror = error => reject(error);
-            reader.readAsDataURL(file);
-        });
+  static async healthCheck() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/health`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Health check error:', error);
+      throw new Error(`Cannot connect to backend: ${error.message}`);
     }
+  }
 
     static async base64ToImageUrl(base64String) {
         return `data:image/png;base64,${base64String}`;
