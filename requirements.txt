@@ -6,3 +6,4 @@ Pillow
 pycryptodome
 Werkzeug
 setuptools
+gunicorn
