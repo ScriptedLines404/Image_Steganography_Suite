@@ -47,7 +47,11 @@ Image_Steganography_Suite/
 │
 ├── 📁 src/                          # 💻 Frontend (React)  
 │   │
-│   ├── 🧩 App.jsx                   # Main React app component  
+│   ├── 🧩 App.jsx                   # Main React app component
+│   │
+│   ├── 📁 components                #  Reusable UI components (Navbar, UploadForm, etc.)
+│   │
+│   ├── 📁 services                  #  API communication layer (handles backend requests) 
 │   │
 │   ├── 🚀 index.js                  # Entry point for React rendering  
 │   │
