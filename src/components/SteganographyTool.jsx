@@ -27,7 +27,7 @@ const SteganographyTool = () => {
       setApiStatus('connected');
     } catch (error) {
       setApiStatus('disconnected');
-      setError('Backend server is not running. Please start the Python backend on port 5000.');
+      setError('Backend server is not running. Please start the Python backend.');
     }
   };
 
@@ -351,7 +351,7 @@ const SteganographyTool = () => {
                 )}
               </div>
 
-              {/* Image Preview - Only show when image is selected */}
+              {/* Image Preview */}
               {coverImage && (
                 <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-gray-800/30 rounded-lg sm:rounded-xl border border-white/5">
                   <h4 className="text-xs sm:text-sm font-medium text-gray-400 mb-2">Image Preview:</h4>
