@@ -35,30 +35,45 @@ A collection of secure **steganography tools** that hide secret messages in imag
 
 ---
 
-## 📂 Project Structure
+## 📁 Repository Structure
 
-```
-Image_Steganography_Suite/
-│
-├── api/                      # Backend (Flask API)
-│   ├── app.py                 # Main API routes
-│   ├── run_backend.py         # Entry point to start Flask server
-│   ├── requirements.txt       # Backend dependencies
-│   └── steganography/         # Steganography algorithms
-│       ├── aes_steganography.py
-│       ├── lsb_steganography.py
-│       └── xor_steganography.py
-│
-├── src/                      # Frontend (React)
-│   ├── App.jsx                # Main React app component
-│   ├── components/            # UI components (Navbar, Hero, Features, etc.)
-│   └── services/api.js        # API communication service
-│
-├── public/                   # Static frontend assets
-├── package.json              # Frontend dependencies
-├── tailwind.config.js        # Styling (Tailwind CSS)
-└── LICENSE                   # MIT License
-```
+<details>
+<summary><b>Image_Steganography_Suite/</b></summary>
+
+│  
+├── <b>api/</b>                      # ⚙️ Backend test and helper scripts  
+│   └── test_api.py                  # 🧪 API testing script  
+│  
+├── <b>src/</b>                      # 💻 Frontend (React)  
+│   ├── App.jsx                      # 🧩 Main React app component  
+│   ├── index.js                     # 🚀 Entry point for React rendering  
+│   └── index.css                    # 🎨 Global styles  
+│  
+├── <b>public/</b>                   # 🗂️ Static frontend assets  
+│   └── index.html                   # 🧱 Root HTML file for the React app  
+│  
+├── aes_steganography.py             # 🔐 AES encryption-based image steganography  
+├── lsb_steganography.py             # 🖼️ LSB (Least Significant Bit) image steganography  
+├── xor_steganography.py             # ⚡ XOR-based steganography algorithm  
+│  
+├── app.py                           # 🧠 Flask backend main routes  
+├── run_backend.py                   # ▶️ Entry point to start Flask server  
+├── wsgi.py                          # 🌐 WSGI entry point for deployment  
+│  
+├── requirements.txt                 # 📦 Backend Python dependencies  
+├── package.json                     # 📦 Frontend dependencies  
+├── package-lock.json                # 🔒 Dependency lock file  
+├── tailwind.config.js               # 🎨 Tailwind CSS configuration  
+├── postcss.config.js                # ⚙️ PostCSS configuration  
+├── static.json                      # 🗄️ Render deployment config (static)  
+├── backend-render.yaml              # ☁️ Render deployment config (backend)  
+├── render.yaml                      # ⚙️ Combined Render deployment configuration  
+│  
+├── README.md                        # 📘 Project documentation  
+└── LICENSE                          # 📄 MIT License  
+
+</details>
+
 
 ---
 
